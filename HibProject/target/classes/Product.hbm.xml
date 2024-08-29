@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="main.java.com.example.hibernate.Product" table="product">
+        <id name="proId" type="int" column="pro_id">
+            <generator class="native"/>
+        </id>
+        <property name="productName" column="product_name"/>
+        <property name="productStock" column="product_stock"/>
+        <property name="category" column="category"/>
+    </class>
+</hibernate-mapping>
