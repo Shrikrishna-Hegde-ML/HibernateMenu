@@ -6,6 +6,7 @@ import java.util.Scanner;
 import org.hibernate.Session;
 
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 
 public class Main{
     public static void main(String[] args) {
@@ -17,9 +18,8 @@ public class Main{
         while(exit != true){
             session.beginTransaction();
             System.out.println("Menu");
-            int choice = 0;
-            System.out.println("1.Add Product, 2.Remove Product, 3.Product Catalog, 4.End Session, 5. Update Product");
-            choice = scan.nextInt();
+            System.out.println("1.Add Product, 2.Remove Product, 3.Product Catalog, 4.End Session, 5. Update Product, 6.Categories");
+            int choice = scan.nextInt();
             switch(choice){
                 case 1: addProduct(session);
                         break;
@@ -34,13 +34,21 @@ public class Main{
                         break;
                 case 5: updateProdcut(session);
                         break;
-                // case 5: AverageSalary(conn);
-                //         break;
+                case 6: categoryFetch(session);
+                        break;
                 default: System.out.println("Select valid option");
             }
         }
         }catch(Exception e){System.out.println(e);}
         
+    }
+
+    static void categoryFetch(Session session){
+        TypedQuery query = session.getNamedQuery("getAllCategories");
+
+        List<Product> allCats = query.getResultList();
+        System.out.println(allCats);
+        session.getTransaction().commit();
     }
 
     static void addProduct(Session session){
@@ -130,7 +138,6 @@ public class Main{
             queryC.setParameter("newStock", newCat);
             queryC.setParameter("proName", proName);
             queryC.executeUpdate();
-            
             break;
 
             default:System.out.println("Enter Valid Value");

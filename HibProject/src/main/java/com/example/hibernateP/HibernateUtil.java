@@ -10,13 +10,16 @@ public class HibernateUtil  {
     
     public static SessionFactory buildSession(){
         SessionFactory sessionFactory1 = null;
-        sessionFactory1 = new Configuration().configure().addAnnotatedClass(Product.class).buildSessionFactory();
+        Configuration config = new Configuration();
+        config.configure();
+        config.addAnnotatedClass(Product.class);
+        sessionFactory1 = config.buildSessionFactory();
         return sessionFactory1;
     }
     
 
     public static SessionFactory getSessionFactory(){
-        System.out.println(sessionFactory);
+        // System.out.println(sessionFactory);
         return sessionFactory;
     }
 }

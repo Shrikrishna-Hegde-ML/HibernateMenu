@@ -15,7 +15,7 @@
 
 
         <property name="hibernate.hbm2ddl.auto">update</property>
-        <mapping class="com.example.hibernateP.Product"/>
+        <!-- <mapping class="com.example.hibernateP.Product"/> -->
         
     </session-factory>
 </hibernate-configuration>

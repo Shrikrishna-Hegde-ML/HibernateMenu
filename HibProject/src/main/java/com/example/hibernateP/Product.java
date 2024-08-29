@@ -5,7 +5,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+
+@NamedQueries(
+    {
+    @NamedQuery(
+        name="getAllCategories",
+        query="select p.category from Product p"
+    )
+})
 
 @Entity
 @Table(name="Product")
