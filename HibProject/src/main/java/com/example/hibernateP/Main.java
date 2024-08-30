@@ -1,7 +1,9 @@
 package com.example.hibernateP;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.hibernate.Session;
 
@@ -18,7 +20,7 @@ public class Main{
         while(exit != true){
             session.beginTransaction();
             System.out.println("Menu");
-            System.out.println("1.Add Product, 2.Remove Product, 3.Product Catalog, 4.End Session, 5. Update Product, 6.Categories");
+            System.out.println("1.Add Product, 2.Remove Product, 3.Product Catalog, 4.End Session, 5. Update Product");
             int choice = scan.nextInt();
             switch(choice){
                 case 1: addProduct(session);
@@ -34,8 +36,6 @@ public class Main{
                         break;
                 case 5: updateProdcut(session);
                         break;
-                case 6: categoryFetch(session);
-                        break;
                 default: System.out.println("Select valid option");
             }
         }
@@ -43,12 +43,22 @@ public class Main{
         
     }
 
-    static void categoryFetch(Session session){
+    static Category findByCatName(Session session,String catName){
+        List<Category> categories = categoryFetch(session);
+        for(Category category : categories){
+            if(category.getCatName().equals(catName)){
+                return category;
+            }
+        }
+        return null;
+
+    }
+
+    static List<Category> categoryFetch(Session session){
         TypedQuery query = session.getNamedQuery("getAllCategories");
 
-        List<Product> allCats = query.getResultList();
-        System.out.println(allCats);
-        session.getTransaction().commit();
+        List<Category> allCats = query.getResultList();
+        return allCats;
     }
 
     static void addProduct(Session session){
@@ -62,12 +72,24 @@ public class Main{
 
         System.out.println("Enter Product Category");
         String proCategory = scan.next();
-
         Product product = new Product();
         product.setProductName(proName);
         product.setProductStock(proStock);
-        product.setCategory(proCategory);
 
+        Set<Product> products = new HashSet<>();
+
+        Category category = findByCatName(session, proCategory);
+        if (category != null){
+            products = category.getProducts();
+        }
+        else{
+            category = new Category();
+            category.setCatName(proCategory);
+            
+        }
+        product.setCategory(category);
+        products.add(product);
+        session.save(category);
         session.save(product);
         session.getTransaction().commit();
     }
@@ -92,7 +114,7 @@ public class Main{
         List<Product> listProducts = session.createQuery("from Product",Product.class).list();
         System.out.println("Id | Product Name | Product Category | Remaining Stock");
         for(Product product : listProducts){
-            System.out.print(product.getProId()+" "+product.getProductName()+" "+product.getCategory()+" "+product.getProductStock());
+            System.out.print(product.getProId()+" "+product.getProductName()+" "+product.getCategory().getCatName()+" "+product.getProductStock());
             System.out.println();
         }
         session.getTransaction().commit();
@@ -106,7 +128,7 @@ public class Main{
         System.out.println("Enter product name which you want to update");
         String proName = scan.next();
 
-        System.out.println("Enter What you want to update: 1. Name, 2.Stock, 3.Category");
+        System.out.println("Enter What you want to update: 1. Name, 2.Stock");
         int upValue = scan.nextInt();
 
         switch(upValue){
@@ -130,15 +152,15 @@ public class Main{
             queryS.executeUpdate();
             break;
 
-            case 3: 
-            String catQuery = "update Product p set p.productStock = :newCat where p.productName = :proName";
-            Query queryC = session.createQuery(catQuery);
-            System.out.println("Enter remaining Stock");
-            String newCat = scan.next();
-            queryC.setParameter("newStock", newCat);
-            queryC.setParameter("proName", proName);
-            queryC.executeUpdate();
-            break;
+            // case 3: 
+            // String catQuery = "update Product p set p.productStock = :newCat where p.productName = :proName";
+            // Query queryC = session.createQuery(catQuery);
+            // System.out.println("Enter remaining Stock");
+            // String newCat = scan.next();
+            // queryC.setParameter("newStock", newCat);
+            // queryC.setParameter("proName", proName);
+            // queryC.executeUpdate();
+            // break;
 
             default:System.out.println("Enter Valid Value");
         }

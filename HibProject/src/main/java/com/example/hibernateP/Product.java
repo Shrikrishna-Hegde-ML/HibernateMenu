@@ -5,17 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@NamedQueries(
-    {
-    @NamedQuery(
-        name="getAllCategories",
-        query="select p.category from Product p"
-    )
-})
+
 
 @Entity
 @Table(name="Product")
@@ -26,7 +20,10 @@ public class Product{
     private int proId;
     private String productName;
     private int productStock;
-    private String category;
+
+    @ManyToOne
+    @JoinColumn(name="catId")
+    private Category category;
 
     Product(){}
     public int getProId(){
@@ -41,7 +38,7 @@ public class Product{
         return this.productStock;
     }
 
-    public String getCategory(){
+    public Category getCategory(){
         return this.category;
     }
 
@@ -57,7 +54,7 @@ public class Product{
         this.productStock = productStock;
     }
 
-    public void setCategory(String category){
+    public void setCategory(Category category){
         this.category = category;
     }
 

@@ -13,6 +13,7 @@ public class HibernateUtil  {
         Configuration config = new Configuration();
         config.configure();
         config.addAnnotatedClass(Product.class);
+        config.addAnnotatedClass(Category.class);
         sessionFactory1 = config.buildSessionFactory();
         return sessionFactory1;
     }
